@@ -23,8 +23,6 @@ public class Intersection
 
     public void requestAccess(MAC mac)
     {
-        System.out.println("MAC-" + mac.getId() + " (" + mac.getStatus() + "): Waiting at the Intersection. Going towards " + mac.getDirection() + ".");
-
         try
         {
             semaphore.acquire();
@@ -38,20 +36,27 @@ public class Intersection
     public void releaseAccess(MAC mac)
     {
         updateTrailCount(mac);
-        System.out.println("MAC-" + mac.getId() + " (" + mac.getStatus() + "): Crossed the Intersection.");
+        
+        System.out.println("MAC-" + mac.getId() + " (" + mac.getStatus() + "): Crossed the intersection.");
+    
+        System.out.println("Total crossed in Trail 1: " + trail1Count + " Trail2: " + trail2Count);
+
         semaphore.release();
         
     }
 
     public void updateTrailCount(MAC mac)
     {
+        
         if (mac.getDirection().equals("CSR1") || mac.getDirection().equals("ED1"))
         {
             trail1Count++;
+            
         }
         else
         {
             trail2Count++;
+            
         }
     }
 

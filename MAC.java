@@ -1,15 +1,20 @@
 /*
- * 
+ * MAC.java
+ * Author: Jo Lynch
+ * Date: 2024-09-21
+ * Description: The MAC object represents the Medical-supply Automated Carts that will cross the intersection.
+ *              This object is created as a Thread and will run concurrently with other MAC objects.
+ *              Mutual exclusion is enforced by the Intersection object to ensure only one MAC crosses the intersection at a time.
  */
 
 
 public class MAC extends Thread
 {
-private int id;
-private String status;
+private int id;                     // The unique identifier for the MAC
+private String status;              // Defines the status of the MAC. I.e. Empty or Stock
 private String direction;           // Defines the direction the MAC is travelling towards. I.e. ED1 or CSR2
-private int checkpoint;
-private int crossingCount;
+private int checkpoint;             // The checkpoint the MAC is at whilst crossing the intersection
+private int crossingCount;          // Number of times the MAC has crossed the intersection
 private int N;                      // Number of times the MAC should cross the intersection
 private Intersection intersection;  // The intersection object that the MACs will cross
 
@@ -31,6 +36,7 @@ public void run()
 {
     while (crossingCount < N)
     {
+        System.out.println("MAC-" + id + " (" + status + "): Waiting at the Intersection. Going towards " + direction + ".");
         intersection.requestAccess(this);
         crossIntersection();
         intersection.releaseAccess(this);
@@ -51,14 +57,15 @@ public void crossIntersection()
         try
         {
             Thread.sleep(50);       // Simulate the time it takes to cross the intersection (50ms)
-        } catch (InterruptedException e)
+        } 
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }
     }
-    System.out.println("MAC-" + id + " (" + status + "): Crossed the intersection.");
     crossingCount++;
-    System.out.println("Total crossed in Trail 1: " + intersection.getTrail1Count() + " Trail2: " + intersection.getTrail2Count());
+
+    
 }
 
 public void changeStatus()
