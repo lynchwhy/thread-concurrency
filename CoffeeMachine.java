@@ -13,6 +13,7 @@ public class CoffeeMachine {
     private String currentMode = ""; // "hot" or "cold"
     private Queue<Client> clientQueue;
     private Dispenser[] dispensers = new Dispenser[3];
+    private int activeDispensers = 0;
     private boolean running = true; // Flag to control the simulation loop
     private int currentTime = 0;
 
@@ -53,7 +54,7 @@ public class CoffeeMachine {
     // Check if any dispenser is still busy
     public synchronized boolean anyDispenserBusy() {
         for (Dispenser dispenser : dispensers) {
-            if (!dispenser.isFree(currentTime)) {
+            if (!dispenser.isFree()) {
                 return true;
             }
         }
@@ -79,11 +80,31 @@ public class CoffeeMachine {
         running = false;
     }
 
+    public String getCurrentMode() {
+        return currentMode;
+
+    }
+
+    // Notify the machine that a dispenser has started serving a client
+    public synchronized void dispenserStarted() {
+        activeDispensers++;
+    }
+
+    // Notify the machine that a dispenser has finished serving a client
+    public synchronized void dispenserFinished() {
+        activeDispensers--;
+    }
+
     public synchronized void runSimulation() {
         // Simulation loop controlled by the coffee machine
         while (isRunning()) {
             // Advance time step by step
             advanceTime();
+
+            // Check if any dispenser is still busy
+            if (activeDispensers == 0) {
+                switchMode();
+            }
 
             // If no more clients and all dispensers are free, stop the simulation
             if (clientQueue.isEmpty() && !anyDispenserBusy()) {

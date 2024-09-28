@@ -27,7 +27,7 @@ dispenser run()
 
 
     coffeemachine()
-        if all dispensers are waiting
+        if all dispensers are finished
             change mode
 
 
