@@ -7,37 +7,37 @@
  */
 
 
-public class Client extends Thread {
-    private String clientID;        // The client's ID
-    private int brewTime;           // The time it takes to brew the coffee
-    private CoffeeMachine machine;  // The coffee machine the client is ordering from
+public class Client {
+    private String clientID;        // The client's ID (e.g. H1, C2)
+    private int brewTime;           // The time it takes to brew their preferred coffee
+    private String mode;            // The mode of coffee they want (hot or cold)
+    private int startTime;          // The time the client starts brewing 
 
-    public Client(String clientID, int brewTime, CoffeeMachine machine) {
+    public Client(String clientID, int brewTime) {
         this.clientID = clientID;
         this.brewTime = brewTime;
-        this.machine = machine;
-    }
-
-    @Override
-    public void run() {
-        if (clientID.startsWith("H")) {
-            machine.requestHotCoffee(this);
-        } else if (clientID.startsWith("C")) {
-            machine.requestColdCoffee(this);
-        }
-
-        // Simulate brewing time
-        System.out.println("brewing coffee " + clientID);  //debugging line
-        try {
-            Thread.sleep(brewTime*100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        machine.releaseDispenser(this);
+        this.mode = clientID.startsWith("H") ? "hot" : "cold";  // If client ID starts with H, they want hot coffee, else they want cold coffee
+        this.startTime = -1;   // (-1 if not yet started)
+        
     }
 
     public String getClientID() {
         return clientID;
+    }
+
+    public int getBrewTime() {
+        return brewTime;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
     }
 }
